@@ -56,7 +56,8 @@ type Identifier struct {
 
 func (i *Identifier) expressionNode()      {}
 func (i *Identifier) TokenLiteral() string { return i.Token.Literal }
-func (i *Identifier) String() string { return i.Value }
+func (i *Identifier) String() string       { return i.Value }
+
 type ReturnStatement struct {
 	Token       token.Token // token.RETURN トークン
 	ReturnValue Expression
@@ -70,10 +71,12 @@ func (rs *ReturnStatement) String() string {
 	}
 	return rs.TokenLiteral() + ";"
 }
+
 type ExpressionStatement struct {
 	Token      token.Token // token.EXPRESSION トークン
 	Expression Expression
 }
+
 func (es *ExpressionStatement) statementNode()       {}
 func (es *ExpressionStatement) TokenLiteral() string { return es.Token.Literal }
 func (es *ExpressionStatement) String() string {
@@ -90,4 +93,29 @@ type IntegerLiteral struct {
 
 func (il *IntegerLiteral) expressionNode()      {}
 func (il *IntegerLiteral) TokenLiteral() string { return il.Token.Literal }
-func (il *IntegerLiteral) String() string { return il.Token.Literal }
+func (il *IntegerLiteral) String() string       { return il.Token.Literal }
+
+type PrefixExpression struct {
+	Token    token.Token // token.BANG or token.MINUS
+	Operator string
+	Right    Expression
+}
+
+func (pe *PrefixExpression) expressionNode()      {}
+func (pe *PrefixExpression) TokenLiteral() string { return pe.Token.Literal }
+func (pe *PrefixExpression) String() string {
+	return "(" + pe.Operator + pe.Right.String() + ")"
+}
+
+type InfixExpression struct {
+	Token    token.Token // token.PLUS, token.MINUS, etc.
+	Left     Expression
+	Operator string
+	Right    Expression
+}
+
+func (oe *InfixExpression) expressionNode()      {}
+func (oe *InfixExpression) TokenLiteral() string { return oe.Token.Literal }
+func (oe *InfixExpression) String() string {
+	return "(" + oe.Left.String() + " " + oe.Operator + " " + oe.Right.String() + ")"
+}
